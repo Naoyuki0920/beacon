@@ -10,7 +10,7 @@ def on_device_found(device: device.Device):
     try:
         print(device.address)
         print(device.name)
-        if (device.name == 'My iPhone'):
+        if (device.name == 'Xperia 5'):
             found_device = device
     except:
         print('Error')
