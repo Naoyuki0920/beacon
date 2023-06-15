@@ -1,26 +1,15 @@
 import bluetooth
 
-# Bluetoothデバイスの情報
-target_name = "Xperia 5"
-target_address = None
+# BluetoothデバイスのMACアドレス
+target_address = '3c:01:ef:33:d8:b8'
 
-# Bluetoothデバイスの検索
-nearby_devices = bluetooth.discover_devices()
-for bdaddr in nearby_devices:
-    if target_name == bluetooth.lookup_name(bdaddr):
-        target_address = bdaddr
-        break
+# Bluetoothデバイスに接続
+sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+sock.connect((target_address, 1))
 
-if target_address is not None:
-    print("デバイスが見つかりました:", target_address)
-    socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-    socket.connect((target_address, 1))
+# テキストを送信
+text = 'Hello from Raspberry Pi!'
+sock.send(text)
 
-    # メッセージを送信
-    message = "Hello from Raspberry Pi!"
-    socket.send(message)
-
-    # ソケットを閉じる
-    socket.close()
-else:
-    print("デバイスが見つかりませんでした.")
+# 接続を閉じる
+sock.close()
