@@ -1,22 +1,26 @@
 import bluetooth
 
-# ペアリングされたデバイスの検索
-print("Searching for devices...")
-devices = bluetooth.discover_devices(lookup_names=True)
-print("Devices found")
+# Bluetoothデバイスの情報
+target_name = "Xperia 5"
+target_address = None
 
-# デバイスの一覧表示
-for addr, name in devices:
-    print(f"{name} ({addr})")
+# Bluetoothデバイスの検索
+nearby_devices = bluetooth.discover_devices()
+for bdaddr in nearby_devices:
+    if target_name == bluetooth.lookup_name(bdaddr):
+        target_address = bdaddr
+        break
 
-# 送信先デバイスのBluetoothアドレス。この例では、リストから手動で選択します。
-bd_addr = "3c:01:ef:33:d8:b8"
+if target_address is not None:
+    print("デバイスが見つかりました:", target_address)
+    socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+    socket.connect((target_address, 1))
 
-port = 1
-sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-sock.connect((bd_addr, port))
+    # メッセージを送信
+    message = "Hello from Raspberry Pi!"
+    socket.send(message)
 
-msg = "Hello from Raspberry Pi!"
-sock.send(msg)
-
-sock.close()
+    # ソケットを閉じる
+    socket.close()
+else:
+    print("デバイスが見つかりませんでした.")
