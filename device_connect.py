@@ -1,49 +1,39 @@
-import logging
-from bluezero import adapter, device
-from bluezero import tools
+from bluepy.btle import Peripheral, DefaultDelegate
 
-found_device: device.Device = None
+# ビーコンのUUID
+beacon_uuid = "0000XXXX-0000-1000-8000-XXXXXXXXXXXX"
 
-# デバイスが見つかったときのコールバック
-def on_device_found(device: device.Device):
-    global found_device
-    try:
-        print(device.address)
-        print(device.name)
-        if (device.name == 'Xperia 5'):
-            found_device = device
-    except:
-        print('Error')
+# ビーコンのアドレス
+beacon_address = "XX:XX:XX:XX:XX:XX"
 
+# 距離計算のための定数
+RSSI_1m = -60  # ビーコンから1m離れた場合のRSSI値
 
-def main():
-    # Bluetoothドングルの取得
-    dongles = adapter.list_adapters()
-    print('dongles available: ', dongles)
-    dongle = adapter.Adapter(dongles[0])
+# ビーコンからの距離を計算する関数
+def calculate_distance(rssi):
+    ratio = rssi / RSSI_1m
+    if ratio < 1.0:
+        return pow(ratio, 10)
+    else:
+        return (0.89976) * pow(ratio, 7.7095) + 0.111
 
-    # Bluetoothドングルの電源が切れている場合は、電源を入れる
-    if not dongle.powered:
-        dongle.powered = True
-        print('Now powered: ', dongle.powered)
-    print('Start discovering')
+# ビーコンとの通信用のデリゲートクラス
+class BeaconDelegate(DefaultDelegate):
+    def __init__(self):
+        DefaultDelegate.__init__(self)
 
-    # デバイスが見つかったときのコールバック
-    dongle.on_device_found = on_device_found
+    def handleNotification(self, cHandle, data):
+        # ビーコンからの通知を受け取った場合の処理
+        rssi = int.from_bytes(data, byteorder='little', signed=True)
+        distance = calculate_distance(rssi)
+        print("Distance:", distance, "m")
 
-    # デバイスのスキャン開始
-    dongle.nearby_discovery(timeout=20)
+# ビーコンとの接続および通信開始
+beacon = Peripheral(beacon_address)
+beacon.withDelegate(BeaconDelegate())
+beacon.writeCharacteristic(0x12, b"\x01\x00")  # ビーコンの通知を有効化
 
-    # デバイスが見つかったら、ペアリング
-    if (found_device != None) :
-        found_device.pair()
-    
-
-    # dongle.powered = False
-
-
-if __name__ == '__main__':
-    print(__name__)
-    logger = tools.create_module_logger('adapter')
-    logger.setLevel(logging.DEBUG)
-    main()
+# 通信ループを開始
+while True:
+    if beacon.waitForNotifications(1.0):
+        continue
