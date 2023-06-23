@@ -1,7 +1,6 @@
 from bluepy.btle import Peripheral, DefaultDelegate
 
 # ビーコンのUUID
-beacon_uuid = "0000XXXX-0000-1000-8000-XXXXXXXXXXXX"
 
 # ビーコンのアドレス
 beacon_address = "XX:XX:XX:XX:XX:XX"
