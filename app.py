@@ -8,7 +8,7 @@ CORS(app)
 # def index():
 #     return render_template("index.html")
 def send_ARData():
-    file_path = "NeilArmstrong.glb"
+    file_path = "CardboardBoxes.gltf"
     return send_file(file_path, as_attachment=True)
 
 if __name__ == '__main__':
