@@ -1,9 +1,5 @@
 from flask import Flask, send_file, render_template
 from flask_cors import CORS
-import json
-
-reader = json.JSONDecoder()
-reader.set_lenient(True) # type: ignore
 
 app = Flask( __name__ ) 
 CORS(app)
