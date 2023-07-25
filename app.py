@@ -9,7 +9,7 @@ CORS(app)
 #     return render_template("index.html")
 def send_ARData():
     file_path = "NeilArmstrong.glb"
-    return send_file(file_path, as_attachment=True, mimetype="model/gltf+json")
+    return send_file(file_path, as_attachment=True, mimetype="application/json")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
