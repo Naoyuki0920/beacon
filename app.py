@@ -7,7 +7,8 @@ CORS(app)
 @app.route('/get_glb', methods=['GET'])
 def get_glb():
     # glbファイルのパスを指定してバイナリデータとして読み込む
-    glb_file_path = 'NeilArmstrong.glb'
+    # glb_file_path = 'NeilArmstrong.glb'
+    glb_file_path = 'Astronaut.glb'
     return send_file(glb_file_path, as_attachment=True, mimetype='model/gltf-binary')
 
 
