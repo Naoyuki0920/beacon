@@ -12,7 +12,7 @@ def get_glb():
     api_url = 'http://192.168.75.10:5000/confirm_glb/1'
     response = requests.get(api_url)
 
-    save_directory = "/"
+    save_directory = "./"
     os.makedirs(save_directory, exist_ok=True)
     file_path = os.path.join(save_directory, '1.glb')
     with open(file_path, 'wb') as file:
