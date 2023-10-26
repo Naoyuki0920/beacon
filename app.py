@@ -15,7 +15,7 @@ def get_glb():
     api_url = 'http://192.168.75.10:5000/confirm_glb/1'
     response = requests.get(api_url)
 
-    save_directory = "./"
+    save_directory = "./static"
     with zipfile.ZipFile(io.BytesIO(response.content), 'r') as zip_ref:
         # ファイルを保存するディレクトリが存在しない場合は作成
         if not os.path.exists(save_directory):
