@@ -11,32 +11,32 @@ CORS(app)
 
 @app.route('/get_glb', methods=['GET'])
 def get_glb():
-    # ディレクトリ内のファイルを取得
-    files = os.listdir("./static")
-    for file in files:
-        file_path = os.path.join("./static", file)
-        os.remove(file_path)
-    
     # 子機ごとにURLのさいごの数字を変更
     api_url = 'http://192.168.75.10:5000/confirm_glb/1'
     response = requests.get(api_url)
-
-    save_directory = "./static"
-    with zipfile.ZipFile(io.BytesIO(response.content), 'r') as zip_ref:
-        # ファイルを保存するディレクトリが存在しない場合は作成
-        if not os.path.exists(save_directory):
-            os.makedirs(save_directory)
-
-        # ZIPファイル内のファイルを展開して保存
-        zip_ref.extractall(save_directory)
     
-    files = os.listdir(save_directory)
+    if response.status_code == 200:
+        files = os.listdir("./static")
+        for file in files:
+            file_path = os.path.join("./static", file)
+            os.remove(file_path)
+
+        with zipfile.ZipFile(io.BytesIO(response.content), 'r') as zip_ref:
+            # ファイルを保存するディレクトリが存在しない場合は作成
+            if not os.path.exists("./static"):
+                os.makedirs("./static")
+
+            # ZIPファイル内のファイルを展開して保存
+            zip_ref.extractall("./static")
+            
+    
+    files = os.listdir("./static")
     zip_filename = 'all_files.zip'
     # ZIPファイルを作成
     with zipfile.ZipFile(zip_filename, 'w') as zipf:
         for file in files:
             # ファイルをZIPに追加
-            file_path = os.path.join(save_directory, file)
+            file_path = os.path.join("./static", file)
             zipf.write(file_path, os.path.basename(file_path))
     # ZIPファイルをクライアントに送信
     return send_file(zip_filename, as_attachment=True)
