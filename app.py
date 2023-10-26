@@ -13,23 +13,38 @@ CORS(app)
 def get_glb():
     # 子機ごとにURLのさいごの数字を変更
     api_url = 'http://192.168.75.10:5000/confirm_glb/1'
-    response = requests.get(api_url)
-    
-    if response.status_code == 200:
-        files = os.listdir("./static")
-        for file in files:
-            file_path = os.path.join("./static", file)
-            os.remove(file_path)
 
-        with zipfile.ZipFile(io.BytesIO(response.content), 'r') as zip_ref:
-            # ファイルを保存するディレクトリが存在しない場合は作成
-            if not os.path.exists("./static"):
-                os.makedirs("./static")
+    try:
+        response = requests.get(api_url)
 
-            # ZIPファイル内のファイルを展開して保存
-            zip_ref.extractall("./static")
-            
-    
+        if response.status_code == 200:
+            files = os.listdir("./static")
+            for file in files:
+                file_path = os.path.join("./static", file)
+                os.remove(file_path)
+
+            with zipfile.ZipFile(io.BytesIO(response.content), 'r') as zip_ref:
+                # ファイルを保存するディレクトリが存在しない場合は作成
+                if not os.path.exists("./static"):
+                    os.makedirs("./static")
+
+                # ZIPファイル内のファイルを展開して保存
+                zip_ref.extractall("./static")
+
+        elif response.status_code == 404:
+            print('APIが見つかりませんでした。')
+
+        # その他のステータスコードの場合
+        else:
+            print(f'APIにアクセスできませんでした。ステータスコード: {response.status_code}')
+    except requests.exceptions.RequestException as e:
+        # リクエストに関連するエラーが発生した場合
+        print(f'リクエストエラーが発生しました: {e}')
+
+    except Exception as e:
+        # その他の例外が発生した場合
+        print(f'エラーが発生しました: {e}')
+
     files = os.listdir("./static")
     zip_filename = 'all_files.zip'
     # ZIPファイルを作成
