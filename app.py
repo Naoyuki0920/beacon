@@ -13,7 +13,7 @@ CORS(app)
 @app.route('/get_glb', methods=['GET'])
 def get_glb():
     # 子機ごとにURLのさいごの数字を変更
-    api_url = 'http://192.168.186.10:5000/confirm_glb/1'
+    api_url = 'http://192.168.11.10:5000/confirm_glb/1'
     zip_filename = 'all_files.zip'
 
     try:
