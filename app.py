@@ -28,15 +28,15 @@ def get_glb():
 
         # その他のステータスコードの場合
         else:
-            print(f'APIにアクセスできませんでした。ステータスコード: {response.status_code}')
+            print(f'error1: {response.status_code}')
 
     except requests.exceptions.RequestException as e:
         # リクエストに関連するエラーが発生した場合
-        print(f'リクエストエラーが発生しました: {e}')
+        print(f'error2: {e}')
 
     except Exception as e:
         # その他の例外が発生した場合
-        print(f'エラーが発生しました: {e}')
+        print(f'error3: {e}')
 
     # ZIPファイルをクライアントに送信
     return send_file(zip_filename, as_attachment=True)
