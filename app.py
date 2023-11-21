@@ -20,10 +20,12 @@ def get_glb():
 
         elif response.status_code == 404:
             print('APIが見つかりませんでした。')
+            print(f'Response Content: {response.text}')
 
         # その他のステータスコードの場合
         else:
             print(f'APIにアクセスできませんでした。ステータスコード: {response.status_code}')
+            print(f'Response Content: {response.text}')
 
     except requests.exceptions.RequestException as e:
         # リクエストに関連するエラーが発生した場合
