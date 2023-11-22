@@ -4,6 +4,7 @@ import zipfile
 from flask import Flask, send_file
 from flask_cors import CORS
 import requests
+from waitress import serve
 import os
 
 app = Flask(__name__)
@@ -42,4 +43,4 @@ def get_glb():
     return send_file(zip_filename, as_attachment=True)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, threaded=True)
+    serve(host='0.0.0.0', port=5000, threads=10)
