@@ -43,4 +43,4 @@ def get_glb():
     return send_file(zip_filename, as_attachment=True)
 
 if __name__ == '__main__':
-    serve(host='0.0.0.0', port=5000, threads=10)
+    serve(app, host='0.0.0.0', port=5000, threads=10)
